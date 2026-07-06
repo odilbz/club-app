@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}الرئيسية — نادي الطموح{% endblock %}
+{% block content %}
+
+<div class="hero-banner">
+    <h2>تشكيلة الموسم الجديد وصلت 🔥</h2>
+    <p>تسوّق قمصان الفريق الرسمية، وسجّل فأكاديمية الناشئين قبل نفاد الأماكن.</p>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a href="{{ url_for('store.index') }}" class="btn btn-accent">تصفح المتجر</a>
+        <a href="{{ url_for('academy.index') }}" class="btn" style="background:rgba(255,255,255,.12); color:#fff;">اكتشف الأكاديمية</a>
+    </div>
+</div>
+
+<div class="section-title">منتجات مميزة من المتجر</div>
+<div class="product-grid" style="margin-bottom:36px;">
+    {% for product in featured_products %}
+    <div class="product-card">
+        <div class="product-img">{{ product.emoji }}</div>
+        <div class="product-body">
+            <span class="tag">{{ product.category }}</span>
+            <h4>{{ product.name }}</h4>
+            <div class="price-row">
+                <span class="price">{{ "%.0f"|format(product.price) }} د.ج</span>
+                <a href="{{ url_for('store.index') }}" class="btn btn-ghost btn-sm">التفاصيل</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="section-title">برامج الأكاديمية</div>
+<div class="program-list">
+    {% for program in featured_programs %}
+    <div class="program-card">
+        <div class="program-thumb">{{ program.age_group }}</div>
+        <div class="program-info">
+            <div>
+                <h4>{{ program.name }}</h4>
+                <div class="program-meta"><span>المدرب: <b>{{ program.coach }}</b></span></div>
+            </div>
+            {% if program.is_free %}
+                <span class="badge-free">مجاني</span>
+            {% else %}
+                <span class="badge-price">{{ "%.0f"|format(program.price) }} د.ج/شهر</span>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

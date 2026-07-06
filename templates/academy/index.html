@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}أكاديمية الناشئين{% endblock %}
+{% block content %}
+
+<div class="academy-hero">
+    <div class="icon">🎓</div>
+    <div>
+        <h2 style="font-size:20px;">أكاديمية الناشئين</h2>
+        <p style="color:var(--muted); font-size:14px; margin-top:6px;">
+            برامج تدريبية معتمدة لكل الفئات العمرية، بإشراف مدربين مرخّصين.
+        </p>
+    </div>
+</div>
+
+<div class="section-title">البرامج المتاحة</div>
+<div class="program-list">
+    {% for program in programs %}
+    <div class="program-card">
+        <div class="program-thumb">{{ program.age_group }}</div>
+        <div class="program-info">
+            <div>
+                <h4>{{ program.name }}</h4>
+                <div class="program-meta">
+                    <span>المدرب: <b>{{ program.coach }}</b></span>
+                    <span>{{ program.sessions_per_week }} حصص/أسبوع</span>
+                </div>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center;">
+                {% if program.is_free %}
+                    <span class="badge-free">مجاني</span>
+                {% else %}
+                    <span class="badge-price">{{ "%.0f"|format(program.price) }} د.ج/شهر</span>
+                {% endif %}
+                <form method="POST" action="{{ url_for('academy.register', program_id=program.id) }}">
+                    <button type="submit" class="btn btn-primary btn-sm">التسجيل</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p class="empty-state">لا توجد برامج متاحة حاليًا.</p>
+    {% endfor %}
+</div>
+{% endblock %}

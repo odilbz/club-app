@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}سلة المشتريات{% endblock %}
+{% block content %}
+<div class="section-title">سلة المشتريات</div>
+
+<div class="card-box">
+    {% for item in items %}
+    <div class="cart-item">
+        <div>
+            <strong>{{ item.product.emoji }} {{ item.product.name }}</strong>
+            <div style="font-size:12px; color:var(--muted);">الكمية: {{ item.quantity }}</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+            <span class="price">{{ "%.0f"|format(item.subtotal) }} د.ج</span>
+            <form method="POST" action="{{ url_for('store.remove_from_cart', product_id=item.product.id) }}">
+                <button type="submit" class="btn btn-ghost btn-sm">إزالة</button>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <p class="empty-state">السلة فارغة حاليًا. <a href="{{ url_for('store.index') }}">تصفح المتجر</a></p>
+    {% endfor %}
+
+    {% if items %}
+    <div class="summary-row total" style="margin-top:16px;">
+        <span>الإجمالي</span><span>{{ "%.0f"|format(total) }} د.ج</span>
+    </div>
+    <form method="POST" action="{{ url_for('store.checkout') }}" style="margin-top:16px;">
+        <button type="submit" class="btn btn-primary btn-block">المتابعة للدفع</button>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

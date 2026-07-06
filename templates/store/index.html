@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}متجر النادي{% endblock %}
+{% block content %}
+
+<div class="hero-banner">
+    <h2>متجر النادي الرسمي</h2>
+    <p>قمصان، إكسسوارات، ومنتجات رسمية معتمدة — توصيل لكل الولايات.</p>
+</div>
+
+<div class="filter-row">
+    {% for cat in categories %}
+    <a href="{{ url_for('store.index', category=cat) if cat != 'الكل' else url_for('store.index') }}"
+       class="chip {{ 'active' if cat == active_category }}">{{ cat }}</a>
+    {% endfor %}
+</div>
+
+<div class="product-grid">
+    {% for product in products %}
+    <div class="product-card">
+        <div class="product-img">{{ product.emoji }}</div>
+        <div class="product-body">
+            <span class="tag">{{ product.category }}</span>
+            <h4>{{ product.name }}</h4>
+            <p style="font-size:12px; color:var(--muted); margin-bottom:10px;">{{ product.description }}</p>
+            <div class="price-row">
+                <span class="price">{{ "%.0f"|format(product.price) }} د.ج</span>
+                <form method="POST" action="{{ url_for('store.add_to_cart', product_id=product.id) }}">
+                    <button type="submit" class="add-btn" title="أضف إلى السلة">+</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p class="empty-state">لا توجد منتجات فهذه الفئة حاليًا.</p>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}الدفع الإلكتروني{% endblock %}
+{% block content %}
+<div class="pay-wrap">
+    <div class="pay-modal">
+        <h3 style="margin-bottom:18px;">اختيار طريقة الدفع</h3>
+
+        <form method="POST" action="{{ url_for('payment.confirm', order_type=order_type, order_id=order_id) }}">
+            {% for card in cards %}
+            <label class="pay-option {{ 'selected' if loop.first }}">
+                <div class="left">
+                    <div class="card-chip"></div>
+                    <div>
+                        <div class="num">•••• •••• •••• {{ card.last4 }}</div>
+                        <div class="exp">{{ card.expiry }}</div>
+                    </div>
+                </div>
+                <input type="radio" name="card_id" value="{{ card.id }}" {{ 'checked' if loop.first }} style="width:20px; height:20px;">
+            </label>
+            {% else %}
+            <p style="font-size:13px; color:var(--muted); margin-bottom:16px;">لا توجد بطاقات محفوظة بعد. أضف بطاقة أولاً.</p>
+            {% endfor %}
+
+            <div class="summary-row"><span>{{ description }}</span><span>{{ "%.0f"|format(amount) }} د.ج</span></div>
+            <div class="summary-row"><span>رسوم خدمة</span><span>{{ "%.0f"|format(service_fee) }} د.ج</span></div>
+            <div class="summary-row total"><span>الإجمالي</span><span>{{ "%.0f"|format(total) }} د.ج</span></div>
+
+            <button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;" {{ 'disabled' if not cards }}>تأكيد الدفع</button>
+        </form>
+
+        <details style="margin-top:20px;">
+            <summary style="cursor:pointer; font-size:13px; color:var(--blue); font-weight:700;">+ إضافة بطاقة جديدة</summary>
+            <form method="POST" action="{{ url_for('payment.add_card') }}" class="add-card-box" style="margin-top:12px;">
+                <input type="hidden" name="order_type" value="{{ order_type }}">
+                <input type="hidden" name="order_id" value="{{ order_id }}">
+                <div class="form-row">
+                    <input type="text" name="card_number" placeholder="رقم البطاقة (تجريبي — لا يُستخدم فعليًا)" maxlength="19" required>
+                </div>
+                <div class="form-row">
+                    <input type="text" name="expiry" placeholder="MM/YYYY" required>
+                </div>
+                <button type="submit" class="btn btn-ghost btn-block btn-sm">حفظ البطاقة</button>
+            </form>
+        </details>
+
+        <p style="font-size:11px; color:var(--muted); margin-top:16px; line-height:1.7;">
+            🔒 هذه بيئة دفع تجريبية (Mock) لأغراض العرض فقط. لا تُستخدم بيانات بطاقات حقيقية،
+            وفي بيئة الإنتاج يجب ربط بوابة دفع معتمدة (CIB/Edahabia أو ما شابه).
+        </p>
+    </div>
+</div>
+{% endblock %}

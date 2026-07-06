@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}تم الدفع بنجاح{% endblock %}
+{% block content %}
+<div class="pay-wrap">
+    <div class="pay-modal" style="text-align:center;">
+        <div style="font-size:50px; margin-bottom:10px;">✅</div>
+        <h3>تم الدفع بنجاح!</h3>
+        <p style="color:var(--muted); margin:14px 0;">{{ description }} — {{ "%.0f"|format(amount) }} د.ج</p>
+        <a href="{{ url_for('main.home') }}" class="btn btn-primary btn-block">العودة للرئيسية</a>
+    </div>
+</div>
+{% endblock %}
